@@ -1,10 +1,10 @@
-import { Exercise } from './exercises/exercise';
-import { Exercise12020 } from './exercises/exercise-1-2020/exercise-1-2020';
-import { runExercise } from './runner';
+import {Exercise} from './exercises/exercise';
+import {runExercise} from './runner';
+import {Exercise12024} from "./exercises/2024/1/exercise.ts";
 
 /**
  * To change exercice, only edit next line.
  */
-const exercice: Exercise = new Exercise12020();
+const exercice: Exercise = new Exercise12024();
 
 runExercise(exercice);
