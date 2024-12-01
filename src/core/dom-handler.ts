@@ -1,4 +1,4 @@
-export function setResult(v: string, parentDivId?: string): undefined {
+export function setResult(v: string | number, parentDivId?: string): undefined {
   setValue(v, 'result', parentDivId);
 }
 

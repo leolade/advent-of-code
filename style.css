@@ -17,7 +17,7 @@ body {
   gap: 60px;
 }
 
-.exercice-part {
+.exercise-part {
   display: flex;
   flex-direction: column;
   align-items: center;
