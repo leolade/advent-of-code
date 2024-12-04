@@ -38,7 +38,27 @@ export class Exercise42024 extends Exercise {
     }
 
     getPart2Result(): number {
-        return NaN;
+        return this.input.reduce<number>(
+            (prev: number, line: string[], y: number) => {
+                return prev + multipleIndexOfChar(line.join(''), 'A')
+                    .reduce<number>((counter: number, x: number) => {
+                        console.log('A find a coordinate', x, y);
+                        const firstDiagonal: [string | undefined, string | undefined] = [
+                            new Coordinate(x, y).translateByCardinalPoint(['N', 'E']).getIn(this.input),
+                            new Coordinate(x, y).translateByCardinalPoint(['S', 'W']).getIn(this.input),
+                        ].sort() as [string | undefined, string | undefined];
+                        const secondDiagonal: [string | undefined, string | undefined] = [
+                            new Coordinate(x, y).translateByCardinalPoint(['N', 'W']).getIn(this.input),
+                            new Coordinate(x, y).translateByCardinalPoint(['S', 'E']).getIn(this.input),
+                        ].sort() as [string | undefined, string | undefined];
+                        return counter + ([firstDiagonal, secondDiagonal].every(
+                            ([m, s]: [string | undefined, string | undefined]) => {
+                                return m === 'M' && s === 'S';
+                            }
+                        ) ? 1 : 0)
+                    }, 0)
+            }, 0
+        )
     }
 
     hasLettersInDirection(letters: string[], direction: CardinalPoint[], source: Coordinate, map: string[][]): boolean {
