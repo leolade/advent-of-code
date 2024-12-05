@@ -14,8 +14,6 @@ export class Exercise52024 extends Exercise {
         .map((line: string) => line.split(',').map((n: string) => +n));
 
     getPart1Result(): number {
-        console.log(this.rules);
-        console.log(this.ordering);
         const mustComeBefore: Map<number, number[]> = new Map();
 
         this.rules.forEach(([before, after]: [number, number]) => {
@@ -42,7 +40,31 @@ export class Exercise52024 extends Exercise {
         }, 0)
     }
 
-    getPart2Result(): string {
-        return 'Not implemented yet';
+    getPart2Result(): number {
+        const mustComeBefore: Map<number, number[]> = new Map();
+
+        this.rules.forEach(([before, after]: [number, number]) => {
+            if (!(mustComeBefore.get(before) ?? []).includes(after)) {
+                mustComeBefore.set(before, [...mustComeBefore.get(before) ?? [], after]);
+            }
+        });
+
+        return this.ordering.filter(
+            (order: number[]) => {
+                let isOk: boolean = true;
+                for (let i = 0, j = 1; j < order.length; i++, j++) {
+                    const before: number = order[i];
+                    const after: number = order[j];
+                    if (!(mustComeBefore.get(before) ?? []).includes(after)) {
+                        isOk = false;
+                        break;
+                    }
+                }
+                return isOk;
+            }
+        ).reduce((prev, curr) => {
+            return prev + curr[Math.round((curr.length / 2) - 1)];
+        }, 0)
+
     }
 }
