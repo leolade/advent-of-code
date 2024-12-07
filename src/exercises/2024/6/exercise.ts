@@ -7,7 +7,7 @@ import {CardinalPoint} from "../../../core/CardinalPoint.ts";
 export class Exercise62024 extends Exercise {
     aocDay: number = 6;
     aocYear: number = 2024;
-    aocName: string = 'N/C';
+    aocName: string = 'Guard Gallivant';
 
     map: string[][] = [];
 
@@ -18,38 +18,31 @@ export class Exercise62024 extends Exercise {
         });
         const x = this.map[y].indexOf('^');
         const startPoint = new Coordinate(x, y);
-        let nextPoint = new Coordinate(x, y);
+        let nextPoint: Coordinate | undefined = new Coordinate(x, y);
         let direction: CardinalPoint = 'N';
-        let acc = 0;
 
-        try {
-            while(true) {
-                acc++
-                const result: [Coordinate, CardinalPoint] = this.move(nextPoint, direction);
-                console.log(result);
-                nextPoint = result[0];
-                direction = result[1];
-            }
-        } catch (e) {
-            console.log('stop')
+        while (nextPoint !== undefined) {
+            const result: [Coordinate | undefined, CardinalPoint] = this.move(nextPoint ?? startPoint, direction);
+            nextPoint = result[0];
+            direction = result[1];
         }
 
-        return acc;
+        return this.map.map(
+            (line: string[]) => {
+                return line.filter((char: string) => char === 'X').length
+            }
+        ).reduce((prev, curr) => prev + curr, 0)
     }
 
-    move(startPoint: Coordinate, direction: CardinalPoint): [Coordinate, CardinalPoint] {
-        console.log('startPoint', startPoint, direction);
+    move(startPoint: Coordinate, direction: CardinalPoint): [Coordinate | undefined, CardinalPoint] {
         const nextCoordinate: Coordinate = startPoint.translateByCardinalPoint([direction]);
         this.map[startPoint.y][startPoint.x] = 'X';
         const nextTile: string | undefined = nextCoordinate.getIn(this.map);
 
-        console.log('nextCoordinate', nextCoordinate.x, nextCoordinate.y);
-        console.log('nextTile', nextTile);
-
         if (nextTile === undefined) {
-            throw new Error("Out of bounds");
+            return [undefined, direction];
         } else if (nextTile === '#') {
-            return [nextCoordinate, this.turn(direction)];
+            return [startPoint, this.turn(direction)];
         }
         return [nextCoordinate, direction];
     }
