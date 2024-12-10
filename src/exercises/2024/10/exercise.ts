@@ -5,8 +5,6 @@ import {input} from "./input.ts";
 
 class HikingPoint extends Coordinate {
 
-    successfullPathFromThisPoint: number = 0;
-
     constructor(x: number, y: number, public value: number) {
         super(x, y);
     }
@@ -29,7 +27,7 @@ export class Exercise102024 extends Exercise {
             if (point.value !== 0) {
                 return prev;
             }
-            const successfullPathCounter = this.findSuccessfullPathFrom(point, hikingPoints, [point], 0);
+            const successfullPathCounter = this.findSuccessfullPathFrom(point, hikingPoints, [point], [], 0);
             return prev + successfullPathCounter;
         }, 0)
     }
@@ -38,31 +36,24 @@ export class Exercise102024 extends Exercise {
         return 'Not implemented yet';
     }
 
-    private findSuccessfullPathFrom(point: HikingPoint, map: HikingPoint[][], currentPath: HikingPoint[], acc: number): number {
+    private findSuccessfullPathFrom(point: HikingPoint, map: HikingPoint[][], currentPath: HikingPoint[], currentNinePointReached: HikingPoint[], acc: number): number {
         (['N', 'E', 'W', 'S'] as CardinalPoint[]).forEach((cardinalPoint: CardinalPoint) => {
             const nextPoint: HikingPoint | undefined = point.translateByCardinalPoint([cardinalPoint]).getIn(map);
-            if (nextPoint === undefined) {
+            if (nextPoint === undefined || nextPoint.value === 0) {
                 return;
             }
-            if (nextPoint.value === 9) {
+            if (currentPath.some((value: HikingPoint) => value.x === nextPoint.x && value.y === nextPoint.y)) {
+                return;
+            }
+            if (point.value === 8 && nextPoint.value === 9 && !currentNinePointReached.includes(nextPoint)) {
                 acc += 1;
-                currentPath.push(nextPoint);
-                this.markPathAsSuccessfull(currentPath);
-            } else if (nextPoint.successfullPathFromThisPoint > 0) {
-                acc += nextPoint.successfullPathFromThisPoint;
-                this.markPathAsSuccessfull(currentPath);
-            } else if ((nextPoint.value - 1) === point.value) {
-                acc += this.findSuccessfullPathFrom(nextPoint, map, [...currentPath, nextPoint], acc);
+                currentNinePointReached.push(nextPoint);
+                console.log('Success', JSON.parse(JSON.stringify([...currentPath, nextPoint])));
+            }
+            if ((nextPoint.value - 1) === point.value) {
+                acc += this.findSuccessfullPathFrom(nextPoint, map, [...currentPath, nextPoint], currentNinePointReached, 0);
             }
         })
         return acc;
-    }
-
-    private markPathAsSuccessfull(currentPath: HikingPoint[]) {
-        currentPath.forEach(
-            (point: HikingPoint) => {
-                point.successfullPathFromThisPoint += 1;
-            }
-        )
     }
 }
