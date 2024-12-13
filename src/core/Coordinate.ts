@@ -43,4 +43,21 @@ export class Coordinate {
 
         return line[this.x];
     }
+
+    getInStringArray(array: string[]): string | undefined {
+        if (this.y < 0 || this.y >= array.length) {
+            return undefined;
+        }
+        const line: string = array[this.y];
+
+        if (!line || this.x < 0 || this.x >= line.length) {
+            return undefined;
+        }
+
+        return line[this.x];
+    }
+
+    getDiff(coordinate: Coordinate): Coordinate {
+        return new Coordinate(this.x - coordinate.x, this.y - coordinate.y);
+    }
 }

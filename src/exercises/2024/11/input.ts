@@ -1,1 +1,1 @@
-export const input = ``;
+export const input = `3279 998884 1832781 517 8 18864 28 0`;
