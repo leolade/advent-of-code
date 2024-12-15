@@ -60,4 +60,8 @@ export class Coordinate {
     getDiff(coordinate: Coordinate): Coordinate {
         return new Coordinate(this.x - coordinate.x, this.y - coordinate.y);
     }
+
+    clone(): Coordinate {
+        return new Coordinate(this.x, this.y);
+    }
 }
